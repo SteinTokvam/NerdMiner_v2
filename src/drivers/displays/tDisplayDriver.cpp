@@ -147,6 +147,53 @@ void tDisplay_ClockScreen(unsigned long mElapsed)
   background.pushSprite(0, 0);
 }
 
+void tDisplay_TempScreen(unsigned long mElapsed)
+{
+  clock_data data = getClockData(mElapsed);
+  temp_data temp = getTempData(mElapsed);
+
+  // Print background screen
+  background.pushImage(0, 0, minerClockWidth, minerClockHeight, minerClockScreen);
+
+  Serial.printf(">>> Completed %s share(s), %s Khashes, avg. hashrate %s KH/s\n",
+                data.completedShares.c_str(), data.totalKHashes.c_str(), data.currentHashRate.c_str());
+
+  // Hashrate
+  render.setFontSize(25);
+  render.setCursor(19, 122);
+  render.setFontColor(TFT_BLACK);
+  render.rdrawString(data.currentHashRate.c_str(), 94, 129, TFT_BLACK);
+
+  // print outside temp
+  render.setFontSize(18);
+  render.rdrawString(temp.insideTemp.c_str(), 239, 1, TFT_BLACK);
+
+  render.setFontSize(4);
+  render.rdrawString(temp.minInsideTemp.c_str(), 244, 3, TFT_BLACK);
+  render.setFontSize(4);
+  render.rdrawString(temp.maxInsideTemp.c_str(), 249, 3, TFT_BLACK);
+
+  // print inside temp
+  render.setFontSize(18);
+  render.rdrawString(temp.outsideTemp.c_str(), 239, 21, TFT_BLACK);
+
+  render.setFontSize(4);
+  render.rdrawString(temp.minOutsideTemp.c_str(), 244, 23, TFT_BLACK);
+
+  render.setFontSize(4);
+  render.rdrawString(temp.maxOutsideTemp.c_str(), 244, 23, TFT_BLACK);
+
+  // Print Hour
+  background.setFreeFont(FF23);
+  background.setTextSize(2);
+  background.setTextColor(0xDEDB, TFT_BLACK);
+
+  background.drawString(data.currentTime.c_str(), 130, 50, GFXFF);
+
+  // Push prepared background to screen
+  background.pushSprite(0, 0);
+}
+
 void tDisplay_GlobalHashScreen(unsigned long mElapsed)
 {
   coin_data data = getCoinData(mElapsed);

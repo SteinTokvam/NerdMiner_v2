@@ -93,6 +93,15 @@ typedef struct {
   unsigned long currentSeconds;
 }clock_data_t;
 
+typedef struct{
+  String insideTemp;
+  String minInsideTemp;
+  String maxInsideTemp;
+  String outsideTemp;
+  String minOutsideTemp;
+  String maxOutsideTemp;
+}temp_data;
+
 typedef struct {
   String completedShares;
   String totalKHashes;

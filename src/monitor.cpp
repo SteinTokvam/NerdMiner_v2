@@ -294,6 +294,18 @@ clock_data_t getClockData_t(unsigned long mElapsed)
   return data;
 }
 
+temp_data getTempData(unsigned long mElapsed)
+{
+  temp_data data;
+  data.insideTemp = String("20", 0);
+  data.minInsideTemp = String("19", 0);
+  data.maxInsideTemp = String("22", 0);
+  data.outsideTemp = String("-5", 0);
+  data.minOutsideTemp = String("-20", 0);
+  data.maxOutsideTemp = String("-10", 0);
+  return data;
+}
+
 coin_data getCoinData(unsigned long mElapsed)
 {
   coin_data data;
