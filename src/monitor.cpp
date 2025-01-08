@@ -34,6 +34,7 @@ String current_block = "793261";
 global_data gData;
 pool_data pData;
 String poolAPIUrl;
+temp_data tData;
 
 
 void setup_monitor(void){
@@ -147,6 +148,37 @@ String getBlockHeight(void){
 }
 
 unsigned long mBTCUpdate = 0;
+
+unsigned long mTempUpdate = 0;
+
+temp_data getTemperatureFromApi(void) {
+
+  if((mTempUpdate == 0) || (millis() - mTempUpdate > UPDATE_Temp_min * 60 * 1000)){
+    mTempUpdate = millis();
+    if (WiFi.status() != WL_CONNECTED) return tData;
+    
+    HTTPClient http;
+    try {
+      http.begin(getTemperatureAPI);
+      int httpCode = http.GET();
+
+      if (httpCode == HTTP_CODE_OK) {
+          String payload = http.getString();
+          DynamicJsonDocument doc(1024);
+          deserializeJson(doc, payload);
+          
+          tData.insideTemp = doc["insideTemp"].as<String>();
+          tData.outsideTemp = doc["outsideTemp"].as<String>();
+          tData.minMaxInsideTemp = doc["minMaxInsideTemp"].as<String>();
+          tData.minMaxOutsideTemp = doc["minMaxOutsideTemp"].as<String>();
+      }
+      http.end();
+    } catch(...) {
+      http.end();
+    }
+  }
+  return tData;
+}
 
 String getBTCprice(void){
     
@@ -294,15 +326,13 @@ clock_data_t getClockData_t(unsigned long mElapsed)
   return data;
 }
 
-temp_data getTempData(unsigned long mElapsed)
+temp_data getTemperatureData(unsigned long mElapsed)
 {
-  temp_data data;
-  data.insideTemp = String("20", 0);
-  data.minInsideTemp = String("19", 0);
-  data.maxInsideTemp = String("22", 0);
-  data.outsideTemp = String("-5", 0);
-  data.minOutsideTemp = String("-20", 0);
-  data.maxOutsideTemp = String("-10", 0);
+  temp_data data = getTemperatureFromApi();
+  //data.insideTemp = "20";
+  //data.minMaxInsideTemp = "19 | 22";
+  //data.outsideTemp = "-5";
+  //data.minMaxOutsideTemp = "-20 | -10";
   return data;
 }
 

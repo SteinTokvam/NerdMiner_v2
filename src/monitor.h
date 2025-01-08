@@ -34,6 +34,9 @@
 #define NEXT_HALVING_EVENT 1050000 //840000
 #define HALVING_BLOCKS 210000
 
+#define getTemperatureAPI "http://192.168.68.61:3001"
+#define UPDATE_Temp_min   5
+
 enum NMState {
   NM_waitingConfig,
   NM_Connecting,
@@ -95,11 +98,9 @@ typedef struct {
 
 typedef struct{
   String insideTemp;
-  String minInsideTemp;
-  String maxInsideTemp;
+  String minMaxInsideTemp;
   String outsideTemp;
-  String minOutsideTemp;
-  String maxOutsideTemp;
+  String minMaxOutsideTemp;
 }temp_data;
 
 typedef struct {
@@ -131,6 +132,7 @@ typedef struct{
 void setup_monitor(void);
 
 mining_data getMiningData(unsigned long mElapsed);
+temp_data getTemperatureData(unsigned long mElapsed);
 clock_data getClockData(unsigned long mElapsed);
 coin_data getCoinData(unsigned long mElapsed);
 pool_data getPoolData(void);
